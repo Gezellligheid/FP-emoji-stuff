@@ -1,27 +1,18 @@
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { computed, defineComponent, reactive, ref } from 'vue'
 import { get } from '../utils/dataAccess'
 import Emoji from './Emoji.vue'
-interface Emojis {
-	[name: string]: string
-}
+import { Emoji as EmojiModel } from '../models/Emoji'
+import { useStore } from 'vuex'
 
 export default defineComponent({
 	components: {
 		Emoji,
 	},
 	setup() {
-		let emojis = reactive<{ data: Emojis }>({ data: {} })
+		const store = useStore()
+		const emojis = computed(() => store.state.caching.emojis)
 
-		// console.log(emojiData)
-		const getData = async () => {
-			const data = await get('https://api.github.com/emojis').then((res) => {
-				return res
-			})
-			console.log(data)
-			emojis.data = data
-		}
-		getData()
 		return {
 			emojis,
 		}
@@ -32,8 +23,16 @@ export default defineComponent({
 <template>
 	<div class="">
 		<div
-			v-if="Object.keys(emojis.data).size != 0"
-			class="grid grid-cols-6 mx-auto w-4/6 mb-8 justify-items-center gap-y-14"
+			v-if="Object.keys(emojis).size != 0"
+			class="
+				grid grid-cols-3
+				lg:grid-cols-6
+				mx-auto
+				w-4/6
+				mb-8
+				justify-items-center
+				gap-y-14
+			"
 		>
 			<!-- <img
 				v-for="(value, key) of emojis.data"
@@ -45,7 +44,7 @@ export default defineComponent({
 			<Emoji
 				v-for="(value, key) of emojis.data"
 				:key="value"
-				:name="key"
+				:name="key.toString()"
 				:image="value"
 			/>
 		</div>

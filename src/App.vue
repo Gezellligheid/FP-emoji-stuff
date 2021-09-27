@@ -4,6 +4,11 @@ import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 
 import Emoji from './components/EmojiOverview.vue'
+import { useStore } from 'vuex'
+import { ActionTypes } from './store/modules/Caching'
+
+const store = useStore()
+store.dispatch(ActionTypes.FETCH_EMOJIS)
 </script>
 
 <template>
@@ -109,7 +114,7 @@ import Emoji from './components/EmojiOverview.vue'
 	</div> -->
 	<div class="min-h-screen bg-gray-100">
 		<AppHeader />
-		<Emoji />
+		<Emoji v-if="Object.keys(store.state.caching.emojis).length" />
 		<AppFooter />
 	</div>
 </template>

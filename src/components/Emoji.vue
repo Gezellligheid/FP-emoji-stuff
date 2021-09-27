@@ -1,5 +1,8 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { Emoji } from '../models/Emoji'
+import { GetterTypes, MutationTypes } from '../store/modules/favorites'
 
 export default defineComponent({
 	props: {
@@ -12,8 +15,25 @@ export default defineComponent({
 			required: true,
 		},
 	},
-	setup() {
-		return {}
+	setup(props) {
+		const store = useStore()
+		// bad practice to create new emoji object
+		const emoji: Emoji = {}
+		emoji[props.name] = props.image
+
+		const handleFavoriteToggle = () => {
+			store.commit(MutationTypes.TOGGLE_FAVORITE, emoji)
+		}
+
+		// computed , want data kan en zal vele veranderen
+		const isFavorite = computed(() => {
+			return store.getters[GetterTypes.CHECK_FAVORITE](props.name)
+		})
+
+		return {
+			handleFavoriteToggle,
+			isFavorite,
+		}
 	},
 })
 </script>
@@ -43,10 +63,11 @@ export default defineComponent({
 				hover:opacity-100 hover:-bottom-6
 			"
 		>
-			<button>
+			<button @click="handleFavoriteToggle">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="h-5 w-5 text-red-500"
+					:class="{ 'fill-current': isFavorite }"
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
@@ -63,6 +84,7 @@ export default defineComponent({
 			<button class="font-mono text-xs">:{{ name }}:</button>
 		</aside>
 		<span
+			v-if="isFavorite"
 			class="absolute top-0 right-0 w-2 h-2 bg-red-500 -mt-2 -mr-2 rounded-full"
 		></span>
 	</div>
