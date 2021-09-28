@@ -114,7 +114,7 @@ store.dispatch(ActionTypes.FETCH_EMOJIS)
 	</div> -->
 	<div class="min-h-screen bg-gray-100">
 		<AppHeader />
-		<Emoji v-if="Object.keys(store.state.caching.emojis).length" />
+		<Emoji v-if="store.state.caching.emojis" />
 		<AppFooter />
 	</div>
 </template>

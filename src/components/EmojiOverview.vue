@@ -42,7 +42,7 @@ export default defineComponent({
 				alt=""
 			/> -->
 			<Emoji
-				v-for="(value, key) of emojis.data"
+				v-for="(value, key) of emojis"
 				:key="value"
 				:name="key.toString()"
 				:image="value"

@@ -1,3 +1,4 @@
+import { useStore } from 'vuex'
 import { Emoji } from '../../models/Emoji'
 
 type State = {
@@ -13,6 +14,8 @@ export enum GetterTypes {
 }
 
 export const localStorageIdentifier: string = 'FAV_STORAGE'
+
+const store = useStore()
 
 const state: State = {
 	favs: localStorage.getItem(localStorageIdentifier)
